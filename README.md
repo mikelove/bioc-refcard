@@ -11,9 +11,16 @@ more information at http://www.bioconductor.org/install/
 ## eSet
 
     library(Biobase)
+    data(sample.ExpressionSet)
+    e <- sample.ExpressionSet
     exprs(e)
     pData(e)
     fData(e)
+
+## Get GEO dataset
+
+    library(GEOquery)
+    e <- getGEO("GSE9514")
 
 ## Annotation
 
