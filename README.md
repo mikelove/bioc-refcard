@@ -20,6 +20,8 @@ more information at http://www.bioconductor.org/install/
     library(GenomicFeatures)
     library(TxDb.Hsapiens.UCSC.hg19.knownGene)
     txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+    # or alternatively from biomart
+    txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
     GR <- transcripts(txdb)
     EX <- exons(txdb)
     GRList <- transcriptsBy(txdb, by = "gene")
