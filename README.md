@@ -8,14 +8,7 @@
 
 more information at http://www.bioconductor.org/install/
 
-## eSet
-
-    library(Biobase)
-    exprs(e)
-    pData(e)
-    fData(e)
-
-## Annotation
+## Annotations
 
     library(biomaRt)
     ensembl = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
@@ -33,13 +26,15 @@ more information at http://www.bioconductor.org/install/
     width(z)
     flank(z, both=TRUE, width=100)
 
-## Sequencing data
+## Sequencing/sequence data
 
     library(Rsamtools)
     which <- GRanges("chr1",IRanges(1000001,1001000))
     what <- c("rname","strand","pos","qwidth","seq")
     param <- ScanBamParam(which=which, what=what)
     reads <- scanBam(bamfile, param=param)
+    dnastringset <- scanFa(fastaFile, param=granges)
+    # DNAStringSet is defined in the Biostrings package
 
 ## RNA-seq
 
@@ -68,6 +63,13 @@ more information at http://www.bioconductor.org/install/
     lrt <- glmLRT(fit,coef=2)
     topTags(lrt)
 
+## eSet
+
+    library(Biobase)
+    exprs(e)
+    pData(e)
+    fData(e)
+
 ## Microarray
 
     library(affy)
@@ -79,3 +81,23 @@ more information at http://www.bioconductor.org/install/
     efit <- eBayes(fit)
     topTable(efit, coef=2)
 
+## Gene ontology set enrichment
+
+    library(org.Hs.eg.db)
+    library(GOstats)
+    params <- new("GOHyperGParams", geneIds = entrezlist, 
+                  universeGeneIds = NULL, annotation ="org.Hs.eg.db", 
+                  ontology="BP", pvalueCutoff=.001, conditional=FALSE, 
+                  testDirection="over")
+    hgOver <- hyperGTest(params)
+    hgSummary <- summary(hgOver)
+
+## help within R
+   
+    ?functionName
+    help("functionName")
+    help("eSet-class")  # classes need the '-class' on the end
+    openVignette("package")
+    vignette("topic", "package")
+    functionName                # prints source code
+    getMethod("method","class") # prints source code for methods
