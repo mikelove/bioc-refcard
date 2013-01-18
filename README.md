@@ -1,6 +1,6 @@
 # Bioconductor quick reference card
 
-## install
+## Install
 
     source("http://bioconductor.org/biocLite.R")
     biocLite()
@@ -17,7 +17,16 @@ more information at http://www.bioconductor.org/install/
                        values = some.ensembl.genes, 
                        mart = ensembl)
 
-## Genomic ranges
+    library(GenomicFeatures)
+    library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+    txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+    # or alternatively from biomart
+    txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+    GR <- transcripts(txdb)
+    EX <- exons(txdb)
+    GRList <- transcriptsBy(txdb, by = "gene")
+
+## GenomicRanges
 
     library(GenomicRanges)
     z <- GRanges("chr1",IRanges(1000001,1001000))
@@ -25,6 +34,23 @@ more information at http://www.bioconductor.org/install/
     end(z)
     width(z)
     flank(z, both=TRUE, width=100)
+
+## SummarizedExperiment
+
+    library(GenomicRanges)
+    library(Rsamtools)
+    fls <- list.files(pattern="*.bam$")
+    bamlst <- BamFileList(fls)
+    library(rtracklayer)
+    gffFile <- "gene_annotation.gtf"
+    gff0 <- import(gffFile, asRangedData=FALSE)
+    idx <- mcols(gff0)$type == "exon"
+    gff <- gff0[idx]
+    tx <- split(gff, mcols(gff)$gene_id)
+    txhits <- summarizeOverlaps(tx, bamlst)
+    assay(txhits)
+    colData(txhits)
+    rowData(txhits)
 
 ## Sequencing/sequence data
 
@@ -36,7 +62,7 @@ more information at http://www.bioconductor.org/install/
     dnastringset <- scanFa(fastaFile, param=granges)
     # DNAStringSet is defined in the Biostrings package
 
-## RNA-seq
+## RNA-seq analysis
 
     library(DESeq)
     cds <- newCountDataSet(counts, condition)
@@ -63,14 +89,21 @@ more information at http://www.bioconductor.org/install/
     lrt <- glmLRT(fit,coef=2)
     topTags(lrt)
 
-## eSet
+## Expresion set
 
     library(Biobase)
+    data(sample.ExpressionSet)
+    e <- sample.ExpressionSet
     exprs(e)
     pData(e)
     fData(e)
 
-## Microarray
+## Get GEO dataset
+
+    library(GEOquery)
+    e <- getGEO("GSE9514")
+
+## Microarray analysis
 
     library(affy)
     library(limma)
