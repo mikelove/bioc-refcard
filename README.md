@@ -8,23 +8,40 @@
 
 more information at http://www.bioconductor.org/install/
 
+## help within R
+   
+    ?functionName
+    ?"eSet-class"         # classes need the '-class' on the end
+    vignette("topic")
+    openVignette("package")      # show vignette selection menu
+    functionName                 # prints source code
+    getMethod("method","class")  # prints source code for methods
+    showMethods(classes="class") # show all methods for class
+
 ## Annotations
 
+    # get a transcript database
+    library(GenomicFeatures)
+    library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+    txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+    
+    # or alternatively build a transcript database from biomart
+    txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+    saveDb(txdb,file="txdb.RData")
+    loadDb("txdb.RData")
+   
+    # get GRanges or GRangesList of genomic features
+    tx <- transcripts(txdb)
+    exons <- exons(txdb)
+    exonsByGenes <- exonsBy(txdb, by="gene")
+
+    # map from one annotation to another
     library(biomaRt)
     ensembl = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
     entrezmap <- getBM(attributes = c("ensembl_gene_id", "entrezgene"), 
     	               filters = "ensembl_gene_id", 
                        values = some.ensembl.genes, 
                        mart = ensembl)
-
-    library(GenomicFeatures)
-    library(TxDb.Hsapiens.UCSC.hg19.knownGene)
-    txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-    # or alternatively from biomart
-    txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
-    GR <- transcripts(txdb)
-    EX <- exons(txdb)
-    GRList <- transcriptsBy(txdb, by = "gene")
 
 ## GenomicRanges
 
@@ -34,6 +51,11 @@ more information at http://www.bioconductor.org/install/
     end(z)
     width(z)
     flank(z, both=TRUE, width=100)
+    x %over% y                      # logical vector of overlaps
+    fo <- findOverlaps(x,y)         # returns a Hits object
+    queryHits(fo)                   # which in x
+    subjectHits(fo)                 # which in y 
+    xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
 
 ## SummarizedExperiment
 
@@ -41,13 +63,19 @@ more information at http://www.bioconductor.org/install/
     library(Rsamtools)
     fls <- list.files(pattern="*.bam$")
     bamlst <- BamFileList(fls)
-    library(rtracklayer)
-    gffFile <- "gene_annotation.gtf"
-    gff0 <- import(gffFile, asRangedData=FALSE)
-    idx <- mcols(gff0)$type == "exon"
-    gff <- gff0[idx]
-    tx <- split(gff, mcols(gff)$gene_id)
-    txhits <- summarizeOverlaps(tx, bamlst)
+    library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+    txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+    tx <- exonsBy(txdb, by="gene")
+    library(parallel)
+    options(mc.cores=4)                      # summarizeOverlaps uses mclapply if parallel loaded
+    txhits <- summarizeOverlaps(tx, bamlst)  # lots of options in the man page
+                                             # mode, singleEnd, ignore.strand, etc.
+    myco <- function(reads, features, ignore.strand) {
+      countOverlaps(features, reads, ignore.strand=ignore.strand)  # allow multiple hits
+    }      
+    txhitsMult <- summarizeOverlaps(tx, bamlst, mode=myco)
+
+    # operations on SummarizedExperiments
     assay(txhits)
     colData(txhits)
     rowData(txhits)
@@ -125,12 +153,3 @@ more information at http://www.bioconductor.org/install/
     hgOver <- hyperGTest(params)
     hgSummary <- summary(hgOver)
 
-## help within R
-   
-    ?functionName
-    help("functionName")
-    help("eSet-class")  # classes need the '-class' on the end
-    openVignette("package")
-    vignette("topic", "package")
-    functionName                # prints source code
-    getMethod("method","class") # prints source code for methods
