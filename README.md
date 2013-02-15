@@ -90,7 +90,7 @@ more information at http://www.bioconductor.org/install/
     dnastringset <- scanFa(fastaFile, param=granges)
     # DNAStringSet is defined in the Biostrings package
 
-## RNA-seq analysis
+## RNA-Seq analysis
 
     library(DESeq)
     cds <- newCountDataSet(counts, condition)
@@ -117,7 +117,7 @@ more information at http://www.bioconductor.org/install/
     lrt <- glmLRT(fit,coef=2)
     topTags(lrt)
 
-## Expresion set
+## Expression set
 
     library(Biobase)
     data(sample.ExpressionSet)
