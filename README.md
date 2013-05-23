@@ -68,18 +68,20 @@ more information at http://www.bioconductor.org/install/
     cds <- estimateSizeFactors(cds)
     cds <- estimateDispersions(cds)
     res <- nbinomTest(cds, "A", "B")
-    # or with glm
+    # glm
     fit1 <- fitNbinomGLMs(cds, count ~ group + treatment)
     fit0 <- fitNbinomGLMs(cds, count ~ group)
     pvals <- nbinomGLMTest(fit1, fit0)
 
     library(edgeR)
     y <- DGEList(counts=counts,group=group)
+    y <- calcNormFactors(y)
+    # exact test
     y <- estimateCommonDisp(y)
     y <- estimateTagwiseDisp(y)
     et <- exactTest(y)
     topTags(et)
-    # or with glm
+    # glm
     design <- model.matrix(~group)
     y <- estimateGLMCommonDisp(y,design)
     y <- estimateGLMTrendedDisp(y,design)
