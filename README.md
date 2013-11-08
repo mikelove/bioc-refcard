@@ -13,7 +13,7 @@ more information at http://www.bioconductor.org/install/
     ?functionName
     ?"eSet-class"         # classes need the '-class' on the end
     vignette("topic")
-    openVignette("package")      # show vignette selection menu
+    browseVignettes(package="package") # show vignettes for the package
     functionName                 # prints source code
     getMethod("method","class")  # prints source code for methods
     showMethods(classes="class") # show all methods for class
@@ -38,10 +38,10 @@ more information at http://www.bioconductor.org/install/
     # map from one annotation to another
     library(biomaRt)
     ensembl = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-    entrezmap <- getBM(attributes = c("ensembl_gene_id", "entrezgene"), 
+    entrezmap <- getBM(mart = ensembl,
+    	      	       attributes = c("ensembl_gene_id", "entrezgene"), 
     	               filters = "ensembl_gene_id", 
-                       values = some.ensembl.genes, 
-                       mart = ensembl)
+                       values = some.ensembl.genes)
 
 ## GenomicRanges
 
@@ -69,11 +69,7 @@ more information at http://www.bioconductor.org/install/
     library(parallel)
     options(mc.cores=4)                      # summarizeOverlaps uses mclapply if parallel loaded
     txhits <- summarizeOverlaps(tx, bamlst)  # lots of options in the man page
-                                             # mode, singleEnd, ignore.strand, etc.
-    myco <- function(reads, features, ignore.strand) {
-      countOverlaps(features, reads, ignore.strand=ignore.strand)  # allow multiple hits
-    }      
-    txhitsMult <- summarizeOverlaps(tx, bamlst, mode=myco)
+                                             # singleEnd, ignore.strand, fragments, etc.
 
     # operations on SummarizedExperiments
     assay(txhits)
