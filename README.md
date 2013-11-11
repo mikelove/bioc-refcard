@@ -20,24 +20,33 @@ more information at http://www.bioconductor.org/install/
 
 ## Annotations
 
-    # get a transcript database
+    # get a transcript database, which stores exon, trancript, and gene information
     library(GenomicFeatures)
     library(TxDb.Hsapiens.UCSC.hg19.knownGene)
     txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
     
-    # or alternatively build a transcript database from biomart
+    # or build a txdb from GTF file (e.g. downloadable from Ensembl FTP site)
+    txdb <- makeTranscriptDbFromGFF("file.GTF", format="gtf")
+    
+    # or build a txdb from Biomart (however, not as easy to reproduce later)
     txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+
+    # saving and loading
     saveDb(txdb,file="txdb.RData")
     loadDb("txdb.RData")
    
-    # get GRanges or GRangesList of genomic features
+    # extracting information from txdb into: 
+    #  - "Genomic Ranges" = a vector of ranges, each with sequence name, start, end, strand
+    #                       e.g. exons or transcripts
+    #  - "Genomic Ranges List" = a list of Genomic Ranges
+    #                          e.g. exons/transcripts split into a list by gene
     tx <- transcripts(txdb)
     exons <- exons(txdb)
     exonsByGenes <- exonsBy(txdb, by="gene")
 
     # map from one annotation to another
     library(biomaRt)
-    ensembl = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+    ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
     entrezmap <- getBM(mart = ensembl,
     	      	       attributes = c("ensembl_gene_id", "entrezgene"), 
     	               filters = "ensembl_gene_id", 
