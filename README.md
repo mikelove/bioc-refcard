@@ -97,15 +97,10 @@ more information at http://www.bioconductor.org/install/
 
 ## RNA-Seq analysis
 
-    library(DESeq)
-    cds <- newCountDataSet(counts, condition)
-    cds <- estimateSizeFactors(cds)
-    cds <- estimateDispersions(cds)
-    res <- nbinomTest(cds, "A", "B")
-    # glm
-    fit1 <- fitNbinomGLMs(cds, count ~ group + treatment)
-    fit0 <- fitNbinomGLMs(cds, count ~ group)
-    pvals <- nbinomGLMTest(fit1, fit0)
+    library(DESeq2)
+    dds <- DESeqDataSet(counts, DataFrame(condition), ~ condition)
+	dds <- DESeq(dds)
+	res <- results(dds)
 
     library(edgeR)
     y <- DGEList(counts=counts,group=group)
@@ -123,6 +118,15 @@ more information at http://www.bioconductor.org/install/
     fit <- glmFit(y,design)
     lrt <- glmLRT(fit,coef=2)
     topTags(lrt)
+
+    library(limma)
+	design <- model.matrix(~ group)
+	dgel <- DGEList(exprs(e))
+	dgel <- calcNormFactors(dgel)
+	v <- voom(dgel,design,plot=FALSE)
+	fit <- lmFit(v,design)
+	fit <- eBayes(fit)
+	topTable(fit,coef=2)
 
 ## Expression set
 
