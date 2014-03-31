@@ -120,13 +120,13 @@ more information at http://www.bioconductor.org/install/
     topTags(lrt)
 
     library(limma)
-	design <- model.matrix(~ group)
-	dgel <- DGEList(exprs(e))
-	dgel <- calcNormFactors(dgel)
-	v <- voom(dgel,design,plot=FALSE)
-	fit <- lmFit(v,design)
-	fit <- eBayes(fit)
-	topTable(fit,coef=2)
+    design <- model.matrix(~ group)
+    dgel <- DGEList(exprs(e))
+    dgel <- calcNormFactors(dgel)
+    v <- voom(dgel,design,plot=FALSE)
+    fit <- lmFit(v,design)
+    fit <- eBayes(fit)
+    topTable(fit,coef=2)
 
 ## Expression set
 
