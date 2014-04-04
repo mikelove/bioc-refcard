@@ -68,11 +68,11 @@ exonsByGenes <- exonsBy(txdb, by="gene")
 ```
 # map from one annotation to another
 library(biomaRt)
-ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-entrezmap <- getBM(mart = ensembl,
-	  	   attributes = c("ensembl_gene_id", "entrezgene"), 
-	   filters = "ensembl_gene_id", 
-   values = some.ensembl.genes)
+m <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+entrezmap <- getBM(mart = m,
+  attributes = c("ensembl_gene_id", "entrezgene"),
+  filters = "ensembl_gene_id", 
+  values = some.ensembl.genes)
 ```
 
 ## GenomicRanges
