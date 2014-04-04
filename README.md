@@ -69,7 +69,7 @@ exonsByGenes <- exonsBy(txdb, by="gene")
 # map from one annotation to another
 library(biomaRt)
 m <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-entrezmap <- getBM(mart = m,
+map <- getBM(mart = m,
   attributes = c("ensembl_gene_id", "entrezgene"),
   filters = "ensembl_gene_id", 
   values = some.ensembl.genes)
