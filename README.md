@@ -20,6 +20,21 @@ more information at http://www.bioconductor.org/install/
 
 ## Annotations
 
+```
+# using one of the *.db annotation packges
+library(pkg.db)
+library(AnnotationDbi)
+columns(pkg.db)
+keytypes(pkg.db)
+head(keys(pkg.db, keytype="PROBEID"))
+# generates warning for 1:many mappings
+res <- select(pkg.db, keys=k,
+  columns=c("ENTREZID","ENSEMBL","SYMBOL"),
+  keytype="PROBEID")
+idx <- match(k, res$PROBEID)
+res[idx,]
+```
+
     # get a transcript database, which stores exon, trancript, and gene information
     library(GenomicFeatures)
     library(TxDb.Hsapiens.UCSC.hg19.knownGene)
