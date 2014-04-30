@@ -20,6 +20,12 @@ browseVignettes(package="package") # show vignettes for the package
 functionName # prints source code
 getMethod("method","class")  # prints source code for methods
 showMethods(classes="class") # show all methods for class
+?"method,class-method" # for S4 objects, where the second 'method' here is the word method
+# e.g.
+?"plotMA,data.frame-method" # from library(geneplotter)
+?"method.class" # for S3 objects
+# e.g.
+?"plot.lm"
 ```
 
 ## Annotations
