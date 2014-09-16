@@ -7,6 +7,12 @@
 source("http://bioconductor.org/biocLite.R")
 biocLite()
 biocLite(c("package1","package2"))
+# what Bioc version is on your machine?
+BiocInstaller::biocVersion()
+# what Bioc version is release
+http://bioconductor.org/bioc-version
+# what Bioc versions are release/devel
+http://bioconductor.org/js/versions.js
 ```
 
 more information at http://www.bioconductor.org/install/
@@ -21,6 +27,12 @@ browseVignettes(package="package") # show vignettes for the package
 functionName # prints source code
 getMethod("method","class")  # prints source code for methods
 showMethods(classes="class") # show all methods for class
+?"method,class-method" # for S4 objects, where the second 'method' here is the word method
+# e.g.
+?"plotMA,data.frame-method" # from library(geneplotter)
+?"method.class" # for S3 objects
+# e.g.
+?"plot.lm"
 ```
 
 ## debugging R
