@@ -1,4 +1,5 @@
 # Bioconductor quick reference card
+# Bioconductor cheat sheet
 
 ## Install
 
@@ -22,6 +23,17 @@ getMethod("method","class")  # prints source code for methods
 showMethods(classes="class") # show all methods for class
 ```
 
+## debugging R
+
+```
+traceback() # what steps lead to an error
+# debug, e.g. topTable from limma:
+debug(topTable) # step line-by-line through the code in a function
+# debug, e.g. estimateSizeFactors from DESeq2...
+# debugging an S4 method is more difficult; this gives you a peek inside:
+trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
+```
+
 ## Annotations
 
 ```
@@ -38,6 +50,51 @@ res <- select(pkg.db, keys=k,
 idx <- match(k, res$PROBEID)
 res[idx,]
 ```
+
+```
+# map from one annotation to another
+library(biomaRt)
+m <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+map <- getBM(mart = m,
+  attributes = c("ensembl_gene_id", "entrezgene"),
+  filters = "ensembl_gene_id", 
+  values = some.ensembl.genes)
+```
+
+
+## GenomicRanges
+
+```
+library(GenomicRanges)
+z <- GRanges("chr1",IRanges(1000001,1001000))
+start(z)
+end(z)
+width(z)
+flank(z, both=TRUE, width=100)
+x %over% y  # logical vector of overlaps
+fo <- findOverlaps(x,y) # returns a Hits object
+queryHits(fo)   # which in x
+subjectHits(fo) # which in y 
+xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
+```
+
+## Sequencing/sequence data
+
+```
+library(Rsamtools)
+which <- GRanges("chr1",IRanges(1000001,1001000))
+what <- c("rname","strand","pos","qwidth","seq")
+param <- ScanBamParam(which=which, what=what)
+reads <- scanBam(bamfile, param=param)
+# DNAStringSet is defined in the Biostrings package
+# see the Biostrings Quick Overview PDF
+dnastringset <- scanFa(fastaFile, param=granges)
+substr(dnastringset[1], 1, 10)
+complement(dnastringset)
+matchPattern("ACGTT", dnastringset[[1]])
+```
+
+## Transcript Databases
 
 ```
 # get a transcript database, which stores exon, trancript, and gene information
@@ -65,31 +122,6 @@ exons <- exons(txdb)
 exonsByGenes <- exonsBy(txdb, by="gene")
 ```
 
-```
-# map from one annotation to another
-library(biomaRt)
-m <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-map <- getBM(mart = m,
-  attributes = c("ensembl_gene_id", "entrezgene"),
-  filters = "ensembl_gene_id", 
-  values = some.ensembl.genes)
-```
-
-## GenomicRanges
-
-```
-library(GenomicRanges)
-z <- GRanges("chr1",IRanges(1000001,1001000))
-start(z)
-end(z)
-width(z)
-flank(z, both=TRUE, width=100)
-x %over% y  # logical vector of overlaps
-fo <- findOverlaps(x,y) # returns a Hits object
-queryHits(fo)   # which in x
-subjectHits(fo) # which in y 
-xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
-```
 
 ## SummarizedExperiment
 
@@ -113,25 +145,14 @@ colData(txhits)
 rowData(txhits)
 ```
 
-## Sequencing/sequence data
-
-```
-library(Rsamtools)
-which <- GRanges("chr1",IRanges(1000001,1001000))
-what <- c("rname","strand","pos","qwidth","seq")
-param <- ScanBamParam(which=which, what=what)
-reads <- scanBam(bamfile, param=param)
-dnastringset <- scanFa(fastaFile, param=granges)
-# DNAStringSet is defined in the Biostrings package
-```
 
 ## RNA-Seq analysis
 
 ```
 library(DESeq2)
 dds <- DESeqDataSet(counts, DataFrame(condition), ~ condition)
-	dds <- DESeq(dds)
-	res <- results(dds)
+dds <- DESeq(dds)
+res <- results(dds)
 ```
 
 ```
