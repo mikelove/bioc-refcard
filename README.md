@@ -33,7 +33,12 @@ showMethods(classes="class") # show all methods for class
 ?"method.class" # for S3 objects
 # e.g.
 ?"plot.lm"
+sessionInfo()
+packageVersion("limma")
 ```
+
+Bioconductor help: https://support.bioconductor.org
+
 
 ## debugging R
 
