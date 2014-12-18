@@ -167,7 +167,7 @@ rowData(txhits)
 
 ```
 library(DESeq2)
-dds <- DESeqDataSet(counts, DataFrame(condition), ~ condition)
+dds <- DESeqDataSetFromMatrix(counts, DataFrame(condition), ~ condition)
 dds <- DESeq(dds)
 res <- results(dds)
 ```
