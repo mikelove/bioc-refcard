@@ -37,8 +37,7 @@ sessionInfo()
 packageVersion("limma")
 ```
 
-Bioconductor help: https://support.bioconductor.org
-
+Bioconductor support website: https://support.bioconductor.org
 
 ## debugging R
 
