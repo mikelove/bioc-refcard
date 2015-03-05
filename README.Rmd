@@ -1,5 +1,4 @@
-# Bioconductor quick reference card
-# Bioconductor cheat sheet
+# Bioconductor quick reference card / cheat sheet
 
 ## Install
 
