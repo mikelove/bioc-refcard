@@ -64,7 +64,7 @@ res[idx,]
 ```
 
 ```
-# map from one annotation to another
+# map from one annotation to another using biomart
 library(biomaRt)
 m <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
 map <- getBM(mart = m,
