@@ -33,7 +33,12 @@ showMethods(classes="class") # show all methods for class
 ?"method.class" # for S3 objects
 # e.g.
 ?"plot.lm"
+sessionInfo()
+packageVersion("limma")
 ```
+
+Bioconductor help: https://support.bioconductor.org
+
 
 ## debugging R
 
@@ -50,16 +55,16 @@ trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
 
 ```
 # using one of the *.db annotation packges
-library(pkg.db)
+library(org.Hs.eg.db)
 library(AnnotationDbi)
-columns(pkg.db)
-keytypes(pkg.db)
-head(keys(pkg.db, keytype="PROBEID"))
+columns(org.Hs.eg.db)
+keytypes(org.Hs.eg.db)
+head(keys(org.Hs.eg.db, keytype="ENTREZID"))
 # generates warning for 1:many mappings
-res <- select(pkg.db, keys=k,
+res <- select(org.Hs.eg.db, keys=k,
   columns=c("ENTREZID","ENSEMBL","SYMBOL"),
-  keytype="PROBEID")
-idx <- match(k, res$PROBEID)
+  keytype="ENTREZID")
+idx <- match(k, res$ENTREZID)
 res[idx,]
 ```
 
@@ -162,7 +167,7 @@ rowData(txhits)
 
 ```
 library(DESeq2)
-dds <- DESeqDataSet(counts, DataFrame(condition), ~ condition)
+dds <- DESeqDataSetFromMatrix(counts, DataFrame(condition), ~ condition)
 dds <- DESeq(dds)
 res <- results(dds)
 ```
