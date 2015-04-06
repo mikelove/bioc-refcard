@@ -87,6 +87,9 @@ z <- GRanges("chr1",IRanges(1000001,1001000),strand="+")
 start(z)
 end(z)
 width(z)
+seqnames(z)
+seqlevels(z)
+seqlengths(z)
 strand(z)
 ranges(z) # gives the IRanges
 ```
@@ -120,7 +123,7 @@ disjoin | breaks into discrete ranges based on original starts/ends
 
 ### Overlaps
 
-```{r}
+```
 x %over% y  # logical vector of which x overlaps any in y
 fo <- findOverlaps(x,y) # returns a Hits object
 queryHits(fo)   # which in x
@@ -129,12 +132,21 @@ subjectHits(fo) # which in y
 
 ### Seqnames and seqlevels
 
-```{r}
+```
 xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
 seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
 ```
 
-## Sequencing/sequence data
+## Sequences
+
+```
+substr(dnastringset[1], 1, 10)
+complement(dnastringset)
+reverseComplement(dnastringset)
+matchPattern("ACGTT", dnastringset[[1]])
+```
+
+## Sequencing data
 
 ```
 library(Rsamtools)
@@ -145,9 +157,6 @@ reads <- scanBam(bamfile, param=param)
 # DNAStringSet is defined in the Biostrings package
 # see the Biostrings Quick Overview PDF
 dnastringset <- scanFa(fastaFile, param=granges)
-substr(dnastringset[1], 1, 10)
-complement(dnastringset)
-matchPattern("ACGTT", dnastringset[[1]])
 ```
 
 ## Transcript Databases
@@ -159,25 +168,25 @@ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
 
 # or build a txdb from GTF file (e.g. downloadable from Ensembl FTP site)
-txdb <- makeTranscriptDbFromGFF("file.GTF", format="gtf")
+txdb <- makeTxDbFromGFF("file.GTF", format="gtf")
 
 # or build a txdb from Biomart (however, not as easy to reproduce later)
-txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+txdb <- makeTxDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
 
 # saving and loading
 saveDb(txdb,file="txdb.RData")
 loadDb("txdb.RData")
 
 # extracting information from txdb into: 
-#  - "Genomic Ranges" = a vector of ranges, each with sequence name, start, end, strand
+#  - "GenomicRanges" = a vector of ranges, each with sequence name, start, end, strand
 #   e.g. exons or transcripts
-#  - "Genomic Ranges List" = a list of Genomic Ranges
-#  e.g. exons/transcripts split into a list by gene
+#  - "GenomicRangesList" = a list of Genomic Ranges
+#  e.g. exons/transcripts split into a list by gene or transcript
 tx <- transcripts(txdb)
 exons <- exons(txdb)
 exonsByGenes <- exonsBy(txdb, by="gene")
+exonsByTx <- exonsBy(txdb, by="tx")
 ```
-
 
 ## SummarizedExperiment
 
