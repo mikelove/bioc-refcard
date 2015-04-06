@@ -273,7 +273,7 @@ res <- featureCounts(files, annot.ext="annotation.gtf",
 res$counts
 ```
 
-## RNA-Seq gene-wise analysis
+## RNA-seq gene-wise analysis
 
 [DESeq2](http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html)
 
