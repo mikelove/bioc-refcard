@@ -88,7 +88,10 @@ start(z)
 end(z)
 width(z)
 strand(z)
+ranges(z) # gives the IRanges
 ```
+
+### Range operations
 
 Intra-range functions | description
 --- | ---
@@ -102,13 +105,27 @@ trim | trims out of bound ranges
 +/- | expands/contracts by adding/subtracting fixed amount
 * | zooms in (positive) or out (negative) by multiples
 
+Inter-range functions | description
+--- | ---
+range | one range, leftmost start to rightmost end
+reduce | cover all positions with only one range
+gap | uncovered positions within range
+disjoin | breaks into discrete ranges based on original starts/ends
+
+### Overlaps
+
 ```{r}
-flank(z, both=TRUE, width=100)
-x %over% y  # logical vector of overlaps
+x %over% y  # logical vector of which x overlaps any in y
 fo <- findOverlaps(x,y) # returns a Hits object
 queryHits(fo)   # which in x
 subjectHits(fo) # which in y 
+```
+
+### Seqnames and seqlevels
+
+```{r}
 xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
+seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
 ```
 
 ## Sequencing/sequence data
