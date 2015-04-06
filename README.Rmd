@@ -139,11 +139,24 @@ seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
 
 ## Sequences
 
+See [cheat sheet for annotation](http://genomicsclass.github.io/book/pages/annoCheat.html)
+
 ```
-substr(dnastringset[1], 1, 10)
+library(BSgenome.Hsapiens.UCSC.hg19)
+dnastringset <- getSeq(Hsapiens, granges) # returns a DNAStringSet
+# also Views() for Bioconductor >= 3.1
+```
+
+```
+substr(dnastringset, 1, 10) # to character string
+Views(dnastringset, 1, 10) # lightweight views into object
 complement(dnastringset)
 reverseComplement(dnastringset)
-matchPattern("ACGTT", dnastringset[[1]])
+matchPattern("ACGTT", dnastring) # also countPattern
+vmatchPattern("ACGTT", dnastringset) # also vcountPattern
+letterFrequecy(dnastringset, "CG") # how many C's or G's
+# also letterFrequencyInSlidingView
+alphabetFrequency(dnastringset, as.prob=TRUE)
 ```
 
 ## Sequencing data
