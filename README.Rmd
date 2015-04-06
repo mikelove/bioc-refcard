@@ -159,6 +159,7 @@ dnastringset <- getSeq(Hsapiens, granges) # returns a DNAStringSet
 
 ```
 substr(dnastringset, 1, 10) # to character string
+subseq(dnastringset, 1, 10) # returns DNAStringSet
 Views(dnastringset, 1, 10) # lightweight views into object
 complement(dnastringset)
 reverseComplement(dnastringset)
@@ -168,6 +169,7 @@ letterFrequecy(dnastringset, "CG") # how many C's or G's
 # also letterFrequencyInSlidingView
 alphabetFrequency(dnastringset, as.prob=TRUE)
 # also oligonucleotideFrequency, dinucleotideFrequency, trinucleotideFrequency
+# transcribe/translate for imitating biological processes
 ```
 
 ## Sequencing data
