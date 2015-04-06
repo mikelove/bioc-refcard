@@ -53,10 +53,12 @@ trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
 
 ## Annotations
 
+[AnnotationDbi](http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html)
+
 ```
 # using one of the annotation packges
-library(org.Hs.eg.db) # or, e.g. Homo.sapiens
 library(AnnotationDbi)
+library(org.Hs.eg.db) # or, e.g. Homo.sapiens
 columns(org.Hs.eg.db)
 keytypes(org.Hs.eg.db)
 head(keys(org.Hs.eg.db, keytype="ENTREZID"))
@@ -67,6 +69,8 @@ res <- select(org.Hs.eg.db, keys=k,
 idx <- match(k, res$ENTREZID)
 res[idx,]
 ```
+
+[biomaRt](http://www.bioconductor.org/packages/release/bioc/html/biomaRt.html)
 
 ```
 # map from one annotation to another using biomart
@@ -79,7 +83,9 @@ map <- getBM(mart = m,
 ```
 
 
-## GenomicRanges
+## Genomic ranges
+
+[GenomicRanges](http://bioconductor.org/packages/release/bioc/html/GenomicRanges.html)
 
 ```
 library(GenomicRanges)
@@ -132,6 +138,8 @@ subjectHits(fo) # which in y
 
 ### Seqnames and seqlevels
 
+[GenomeInfoDb](http://www.bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html)
+
 ```
 xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
 seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
@@ -139,7 +147,9 @@ seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
 
 ## Sequences
 
-See [cheat sheet for annotation](http://genomicsclass.github.io/book/pages/annoCheat.html)
+[Biostrings](http://www.bioconductor.org/packages/release/bioc/html/Biostrings.html)
+
+For naming, see [cheat sheet for annotation](http://genomicsclass.github.io/book/pages/annoCheat.html)
 
 ```
 library(BSgenome.Hsapiens.UCSC.hg19)
@@ -157,11 +167,12 @@ vmatchPattern("ACGTT", dnastringset) # also vcountPattern
 letterFrequecy(dnastringset, "CG") # how many C's or G's
 # also letterFrequencyInSlidingView
 alphabetFrequency(dnastringset, as.prob=TRUE)
+# also oligonucleotideFrequency, dinucleotideFrequency, trinucleotideFrequency
 ```
 
 ## Sequencing data
 
-Rsamtools `scanBam` returns lists of raw values from BAM files
+[Rsamtools](http://www.bioconductor.org/packages/release/bioc/html/Rsamtools.html) `scanBam` returns lists of raw values from BAM files
 
 ```
 library(Rsamtools)
@@ -174,7 +185,7 @@ reads <- scanBam(bamfile, param=param)
 dnastringset <- scanFa(fastaFile, param=granges)
 ```
 
-GenomicAlignments package returns Bioconductor objects (GRanges-based)
+[GenomicAlignments](http://www.bioconductor.org/packages/release/bioc/html/GenomicAlignments.html) returns Bioconductor objects (GRanges-based)
 
 ```
 library(GenomicAlignments)
@@ -184,6 +195,8 @@ ga <- readGAlignmentPairs(bamfile) # paired-end
 
 ## Transcript Databases
 
+[GenomicFeatures](http://www.bioconductor.org/packages/release/bioc/html/GenomicFeatures.html)
+
 ```
 # get a transcript database, which stores exon, trancript, and gene information
 library(GenomicFeatures)
@@ -191,10 +204,12 @@ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
 
 # or build a txdb from GTF file (e.g. downloadable from Ensembl FTP site)
-txdb <- makeTxDbFromGFF("file.GTF", format="gtf")
+txdb <- makeTranscriptDbFromGFF("file.GTF", format="gtf")
 
 # or build a txdb from Biomart (however, not as easy to reproduce later)
-txdb <- makeTxDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+
+# in Bioconductor >= 3.1, also makeTxDbFromGRanges
 
 # saving and loading
 saveDb(txdb,file="txdb.RData")
@@ -212,6 +227,8 @@ exonsByTx <- exonsBy(txdb, by="tx")
 ```
 
 ## SummarizedExperiment
+
+The SummarizedExperiment is a storage class for high-dimensional information which is tied to the same GenomicRanges across a number of different experiments (e.g., quantity of reads in fixed ranges).
 
 ```
 library(GenomicAlignments)
