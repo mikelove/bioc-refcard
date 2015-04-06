@@ -141,11 +141,12 @@ subjectHits(fo) # which in y
 
 ### Seqnames and seqlevels
 
-[GenomeInfoDb](http://www.bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html)
+[GenomicRanges](http://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html) and [GenomeInfoDb](http://www.bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html)
+
 
 ```
-xsub <- keepSeqlevels(x, seqs)  # subsets x based on the seqlevels seqs
-seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style, also "NCBI" for '1'
+gr.sub <- gr[seqlevels(gr) == "chr1"]
+seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style from "NCBI" style '1'
 ```
 
 ## Sequences
