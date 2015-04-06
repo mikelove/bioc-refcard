@@ -238,9 +238,9 @@ exonsByGenes <- exonsBy(txdb, by="gene")
 exonsByTx <- exonsBy(txdb, by="tx")
 ```
 
-## SummarizedExperiment
+## Summarizing information across ranges
 
-The SummarizedExperiment is a storage class for high-dimensional information which is tied to the same GenomicRanges across a number of different experiments (e.g., quantity of reads in fixed ranges).
+The SummarizedExperiment is a storage class for high-dimensional information tied to the same GRanges or GRangesList across experiments (e.g., read counts in exons for each gene).
 
 ```
 library(GenomicAlignments)
@@ -270,6 +270,7 @@ res <- featureCounts(files, annot.ext="annotation.gtf",
   isGTFAnnotationFile=TRUE,
   GTF.featureType="exon",
   GTF.attrType="gene_id")
+res$counts
 ```
 
 ## RNA-Seq analysis
