@@ -87,11 +87,11 @@ z <- GRanges("chr1",IRanges(1000001,1001000),strand="+")
 start(z)
 end(z)
 width(z)
-seqnames(z)
-seqlevels(z)
-seqlengths(z)
 strand(z)
 ranges(z) # gives the IRanges
+seqnames(z) # the chromosomes for each ranges
+seqlevels(z) # the possible chromosomes
+seqlengths(z) # the lengths for each chromosome
 ```
 
 ### Intra-range methods
@@ -148,6 +148,8 @@ matchPattern("ACGTT", dnastringset[[1]])
 
 ## Sequencing data
 
+Rsamtools `scanBam` returns lists of raw values from BAM files
+
 ```
 library(Rsamtools)
 which <- GRanges("chr1",IRanges(1000001,1001000))
@@ -157,6 +159,14 @@ reads <- scanBam(bamfile, param=param)
 # DNAStringSet is defined in the Biostrings package
 # see the Biostrings Quick Overview PDF
 dnastringset <- scanFa(fastaFile, param=granges)
+```
+
+GenomicAlignments package returns Bioconductor objects (GRanges-based)
+
+```
+library(GenomicAlignments)
+ga <- readGAlignments(bamfile) # single-end
+ga <- readGAlignmentPairs(bamfile) # paired-end
 ```
 
 ## Transcript Databases
@@ -191,23 +201,23 @@ exonsByTx <- exonsBy(txdb, by="tx")
 ## SummarizedExperiment
 
 ```
-library(GenomicRanges)
-library(Rsamtools)
+library(GenomicAlignments)
 fls <- list.files(pattern="*.bam$")
-bamlst <- BamFileList(fls)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-tx <- exonsBy(txdb, by="gene")
-library(parallel)
-options(mc.cores=4)  # summarizeOverlaps uses mclapply if parallel loaded
-txhits <- summarizeOverlaps(tx, bamlst)  # lots of options in the man page
- # singleEnd, ignore.strand, fragments, etc.
+genes <- exonsBy(txdb, by="gene")
+# see yieldSize argument for restricting memory
+bf <- BamFileList(fls)
+library(BiocParallel)
+register(MulticoreParam(4))
+# lots of options in the man page
+# singleEnd, ignore.strand, inter.features, fragments, etc.
+se <- summarizeOverlaps(genes, bf)
 
-
-# operations on SummarizedExperiments
-assay(txhits)
-colData(txhits)
-rowData(txhits)
+# operations on SummarizedExperiment
+assay(se) # the counts from summarizeOverlaps
+colData(se)
+rowRanges(se)
 ```
 
 
@@ -215,6 +225,9 @@ rowData(txhits)
 
 ```
 library(DESeq2)
+# from SummarizedExperiment
+dds <- DESeqDataSet(se, ~ condition)
+# from count matrix
 dds <- DESeqDataSetFromMatrix(counts, DataFrame(condition), ~ condition)
 dds <- DESeq(dds)
 res <- results(dds)
