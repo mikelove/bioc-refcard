@@ -181,7 +181,15 @@ library(Rsamtools)
 which <- GRanges("chr1",IRanges(1000001,1001000))
 what <- c("rname","strand","pos","qwidth","seq")
 param <- ScanBamParam(which=which, what=what)
+# for more BamFile functions/details see ?BamFile
+# yieldSize for chunk-wise access
+bamfile <- BamFile("/path/to/file.bam")
 reads <- scanBam(bamfile, param=param)
+res <- countBam(bamfile, param=para)
+
+# quickly check chromosome names
+seqinfo(BamFile("/path/to/file.bam"))
+
 # DNAStringSet is defined in the Biostrings package
 # see the Biostrings Quick Overview PDF
 dnastringset <- scanFa(fastaFile, param=granges)
