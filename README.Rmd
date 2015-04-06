@@ -205,7 +205,7 @@ ga <- readGAlignments(bamfile) # single-end
 ga <- readGAlignmentPairs(bamfile) # paired-end
 ```
 
-## Transcript Databases
+## Transcript databases
 
 [GenomicFeatures](http://www.bioconductor.org/packages/release/bioc/html/GenomicFeatures.html)
 
@@ -227,14 +227,10 @@ txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gen
 saveDb(txdb, file="txdb.sqlite")
 loadDb("txdb.sqlite")
 
-# extracting information from txdb into: 
-#  - "GenomicRanges" = a vector of ranges, each with sequence name, start, end, strand
-#   e.g. exons or transcripts
-#  - "GenomicRangesList" = a list of Genomic Ranges
-#  e.g. exons/transcripts split into a list by gene or transcript
-g <- genes(txdb) # just start to end, no exon/intron information
-tx <- transcripts(txdb) # similar to genes()
-exons <- exons(txdb)
+# extracting information from txdb
+g <- genes(txdb) # GRanges, just start to end, no exon/intron information
+tx <- transcripts(txdb) # GRanges, similar to genes()
+exons <- exons(txdb) # GRanges for each exon
 exonsByGenes <- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
 exonsByTx <- exonsBy(txdb, by="tx") # similar but by transcript
 ```
