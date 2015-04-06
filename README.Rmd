@@ -273,17 +273,21 @@ res <- featureCounts(files, annot.ext="annotation.gtf",
 res$counts
 ```
 
-## RNA-Seq analysis
+## RNA-Seq gene-wise analysis
+
+[DESeq2](http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html)
 
 ```
 library(DESeq2)
 # from SummarizedExperiment
-dds <- DESeqDataSet(se, ~ condition)
+dds <- DESeqDataSet(se, ~ group)
 # from count matrix
-dds <- DESeqDataSetFromMatrix(counts, DataFrame(condition), ~ condition)
+dds <- DESeqDataSetFromMatrix(counts, DataFrame(group), ~ group)
 dds <- DESeq(dds)
 res <- results(dds)
 ```
+
+[edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
 
 ```
 library(edgeR)
@@ -304,6 +308,8 @@ lrt <- glmLRT(fit,coef=2)
 topTags(lrt)
 ```
 
+[limma/voom](http://www.bioconductor.org/packages/release/bioc/html/limma.html)
+
 ```
 library(limma)
 design <- model.matrix(~ group)
@@ -314,6 +320,8 @@ fit <- lmFit(v,design)
 fit <- eBayes(fit)
 topTable(fit,coef=2)
 ```
+
+[Many more RNA-seq packages](http://www.bioconductor.org/packages/release/BiocViews.html#___RNASeq)
 
 ## Expression set
 
