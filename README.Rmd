@@ -232,10 +232,11 @@ loadDb("txdb.RData")
 #   e.g. exons or transcripts
 #  - "GenomicRangesList" = a list of Genomic Ranges
 #  e.g. exons/transcripts split into a list by gene or transcript
-tx <- transcripts(txdb)
+g <- genes(txdb) # just start to end, no exon/intron information
+tx <- transcripts(txdb) # similar to genes()
 exons <- exons(txdb)
-exonsByGenes <- exonsBy(txdb, by="gene")
-exonsByTx <- exonsBy(txdb, by="tx")
+exonsByGenes <- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
+exonsByTx <- exonsBy(txdb, by="tx") # similar but by transcript
 ```
 
 ## Summarizing information across ranges and experiments
