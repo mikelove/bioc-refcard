@@ -91,9 +91,11 @@ strand(z)
 ranges(z) # gives the IRanges
 ```
 
-### Range operations
+### Intra-range methods
 
-Intra-range functions | description
+Affects ranges independently
+
+function | description
 --- | ---
 shift | moves left/right
 narrow | narrows by relative position within range
@@ -105,7 +107,11 @@ trim | trims out of bound ranges
 +/- | expands/contracts by adding/subtracting fixed amount
 * | zooms in (positive) or out (negative) by multiples
 
-Inter-range functions | description
+### Inter-range methods
+
+Affects ranges as a group
+
+function | description
 --- | ---
 range | one range, leftmost start to rightmost end
 reduce | cover all positions with only one range
