@@ -43,10 +43,10 @@ Bioconductor support website: https://support.bioconductor.org
 
 ```
 traceback() # what steps lead to an error
-# debug, e.g. topTable from limma:
-debug(topTable) # step line-by-line through the code in a function
-undebug(topTable) # stop debugging
-debugonce(topTable) # same as above, but doesn't need undebug()
+# debug a function
+debug(myFunction) # step line-by-line through the code in a function
+undebug(myFunction) # stop debugging
+debugonce(myFunction) # same as above, but doesn't need undebug()
 # debug, e.g. estimateSizeFactors from DESeq2...
 # debugging an S4 method is more difficult; this gives you a peek inside:
 trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
