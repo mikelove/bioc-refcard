@@ -44,6 +44,8 @@ Bioconductor support website: https://support.bioconductor.org
 traceback() # what steps lead to an error
 # debug, e.g. topTable from limma:
 debug(topTable) # step line-by-line through the code in a function
+undebug(topTable) # stop debugging
+debugonce(topTable) # same as above, but doesn't need undebug()
 # debug, e.g. estimateSizeFactors from DESeq2...
 # debugging an S4 method is more difficult; this gives you a peek inside:
 trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
@@ -52,8 +54,8 @@ trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
 ## Annotations
 
 ```
-# using one of the *.db annotation packges
-library(org.Hs.eg.db)
+# using one of the annotation packges
+library(org.Hs.eg.db) # or, e.g. Homo.sapiens
 library(AnnotationDbi)
 columns(org.Hs.eg.db)
 keytypes(org.Hs.eg.db)
@@ -81,10 +83,25 @@ map <- getBM(mart = m,
 
 ```
 library(GenomicRanges)
-z <- GRanges("chr1",IRanges(1000001,1001000))
+z <- GRanges("chr1",IRanges(1000001,1001000),strand="+")
 start(z)
 end(z)
 width(z)
+strand(z)
+```
+
+Intra-range functions | description
+--- | ---
+shift |
+narrow | 
+resize |
+flank |
+promoters |
+restrict |
+trim |
+
+
+```{r}
 flank(z, both=TRUE, width=100)
 x %over% y  # logical vector of overlaps
 fo <- findOverlaps(x,y) # returns a Hits object
