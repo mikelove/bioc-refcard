@@ -92,14 +92,15 @@ strand(z)
 
 Intra-range functions | description
 --- | ---
-shift |
-narrow | 
-resize |
-flank |
-promoters |
-restrict |
-trim |
-
+shift | moves left/right
+narrow | narrows by relative position within range
+resize | resizes to width, fixing start for +, end for -
+flank | returns flanking ranges to the left +, or right -
+promoters | similar to flank
+restrict | restricts ranges to a start and end position
+trim | trims out of bound ranges
++/- | expands/contracts by adding/subtracting fixed amount
+* | zooms in (positive) or out (negative) by multiples
 
 ```{r}
 flank(z, both=TRUE, width=100)
