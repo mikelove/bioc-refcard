@@ -185,7 +185,9 @@ param <- ScanBamParam(which=which, what=what)
 # yieldSize for chunk-wise access
 bamfile <- BamFile("/path/to/file.bam")
 reads <- scanBam(bamfile, param=param)
-res <- countBam(bamfile, param=para)
+res <- countBam(bamfile, param=para) 
+# for more sophisticated counting modes
+# see summarizeOverlaps() below
 
 # quickly check chromosome names
 seqinfo(BamFile("/path/to/file.bam"))
@@ -260,6 +262,15 @@ colData(se)
 rowRanges(se)
 ```
 
+Another fast Bioconductor read counting method is featureCounts in [Rsubread](http://www.bioconductor.org/packages/release/bioc/html/Rsubread.html)
+
+```
+library(Rsubread)
+res <- featureCounts(files, annot.ext="annotation.gtf",
+  isGTFAnnotationFile=TRUE,
+  GTF.featureType="exon",
+  GTF.attrType="gene_id")
+```
 
 ## RNA-Seq analysis
 
