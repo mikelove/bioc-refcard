@@ -21,6 +21,7 @@ more information at http://www.bioconductor.org/install/
 ```
 ?functionName
 ?"eSet-class" # classes need the '-class' on the end
+help(package="foo",help_type="html") # launch web browser help
 vignette("topic")
 browseVignettes(package="package") # show vignettes for the package
 functionName # prints source code
