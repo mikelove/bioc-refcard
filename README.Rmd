@@ -28,14 +28,12 @@ functionName # prints source code
 getMethod("method","class")  # prints source code for methods
 showMethods(classes="class") # show all methods for class
 methods(class="GRanges") # this will work in R >= 3.2
-?"method,class-method" # for S4 objects, where the second 'method' here is the word method
-# e.g.
+?"functionName,class-method" # method help for S4 objects, e.g.:
 ?"plotMA,data.frame-method" # from library(geneplotter)
-?"method.class" # for S3 objects
-# e.g.
+?"method.class" # method help for S3 objects e.g.:
 ?"plot.lm"
-sessionInfo()
-packageVersion("limma")
+sessionInfo() # necessary info for getting help
+packageVersion("foo") # what version of package 
 ```
 
 Bioconductor support website: https://support.bioconductor.org
