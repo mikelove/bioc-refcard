@@ -71,6 +71,8 @@ idx <- match(k, res$ENTREZID)
 res[idx,]
 ```
 
+For a cleaner function call, see [convertIDs](https://github.com/mikelove/bioc-refcard/blob/master/convertIDs.R)
+
 [biomaRt](http://www.bioconductor.org/packages/release/bioc/html/biomaRt.html)
 
 ```
