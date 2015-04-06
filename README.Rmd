@@ -238,7 +238,7 @@ exonsByGenes <- exonsBy(txdb, by="gene")
 exonsByTx <- exonsBy(txdb, by="tx")
 ```
 
-## Summarizing information across ranges
+## Summarizing information across ranges and experiments
 
 The SummarizedExperiment is a storage class for high-dimensional information tied to the same GRanges or GRangesList across experiments (e.g., read counts in exons for each gene).
 
