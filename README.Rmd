@@ -224,8 +224,8 @@ txdb <- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gen
 # in Bioconductor >= 3.1, also makeTxDbFromGRanges
 
 # saving and loading
-saveDb(txdb,file="txdb.RData")
-loadDb("txdb.RData")
+saveDb(txdb, file="txdb.sqlite")
+loadDb("txdb.sqlite")
 
 # extracting information from txdb into: 
 #  - "GenomicRanges" = a vector of ranges, each with sequence name, start, end, strand
