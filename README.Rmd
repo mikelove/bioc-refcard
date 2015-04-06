@@ -1,4 +1,5 @@
-# Bioconductor quick reference card / cheat sheet
+# Bioconductor quick reference card 
+# Bioconductor cheat sheet
 
 ## Install
 
@@ -162,7 +163,7 @@ substr(dnastringset, 1, 10) # to character string
 Views(dnastringset, 1, 10) # lightweight views into object
 complement(dnastringset)
 reverseComplement(dnastringset)
-matchPattern("ACGTT", dnastring) # also countPattern
+matchPattern("ACGTT", dnastring) # also countPattern, also works on Hsapiens/genome
 vmatchPattern("ACGTT", dnastringset) # also vcountPattern
 letterFrequecy(dnastringset, "CG") # how many C's or G's
 # also letterFrequencyInSlidingView
