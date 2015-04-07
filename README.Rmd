@@ -144,6 +144,16 @@ distance | distances to nearest neighbor (integer vector)
 
 A Hits object can be accessed with `queryHits`, `subjectHits` and `mcols` if a distance is associated.
 
+### set methods
+
+If `y` is a GRangesList, then use `punion`, etc. All functions have default `ignore.strand=FALSE`, so are strand specific.
+
+```
+union(x,y) 
+intersect(x,y)
+setdiff(x,y)
+```
+
 ### Overlaps
 
 ```
