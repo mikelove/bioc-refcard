@@ -96,6 +96,7 @@ start(z)
 end(z)
 width(z)
 strand(z)
+mcols(z) # the 'metadata columns', any information stored alongside each range
 ranges(z) # gives the IRanges
 seqnames(z) # the chromosomes for each ranges
 seqlevels(z) # the possible chromosomes
@@ -128,6 +129,20 @@ range | one range, leftmost start to rightmost end
 reduce | cover all positions with only one range
 gap | uncovered positions within range
 disjoin | breaks into discrete ranges based on original starts/ends
+
+### Nearest methods
+
+Given two sets of ranges, `x` and `subject`, for each range in `x`, returns...
+
+function | description
+--- | ---
+nearest | index of the nearest neighbor range in subject
+precede | index of the range in subject that is directly preceded by the range in x
+follow |index of the range in subject that is directly followed by the range in x
+distanceToNearest | distances to its nearest neighbor in subject (Hits object)
+distance | distances to nearest neighbor (integer vector)
+
+A Hits object can be accessed with `queryHits`, `subjectHits` and `mcols` if a distance is associated.
 
 ### Overlaps
 
