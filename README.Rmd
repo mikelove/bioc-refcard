@@ -213,7 +213,7 @@ param <- ScanBamParam(which=which, what=what)
 # yieldSize for chunk-wise access
 bamfile <- BamFile("/path/to/file.bam")
 reads <- scanBam(bamfile, param=param)
-res <- countBam(bamfile, param=para) 
+res <- countBam(bamfile, param=param) 
 # for more sophisticated counting modes
 # see summarizeOverlaps() below
 
