@@ -315,7 +315,8 @@ res <- results(dds)
 [edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
 
 ```
-library(edgeR)
+# this chunk from the Quick start in the edgeR User Guide
+library(edgeR) 
 y <- DGEList(counts=counts,group=group)
 y <- calcNormFactors(y)
 # exact test
@@ -338,7 +339,7 @@ topTags(lrt)
 ```
 library(limma)
 design <- model.matrix(~ group)
-dgel <- DGEList(exprs(e))
+dgel <- DGEList(counts)
 dgel <- calcNormFactors(dgel)
 v <- voom(dgel,design,plot=FALSE)
 fit <- lmFit(v,design)
