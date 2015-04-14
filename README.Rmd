@@ -127,7 +127,7 @@ function | description
 --- | ---
 range | one range, leftmost start to rightmost end
 reduce | cover all positions with only one range
-gap | uncovered positions within range
+gaps | uncovered positions within range
 disjoin | breaks into discrete ranges based on original starts/ends
 
 ### Nearest methods
