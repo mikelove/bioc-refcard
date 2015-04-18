@@ -62,6 +62,9 @@ library(org.Hs.eg.db) # or, e.g. Homo.sapiens
 columns(org.Hs.eg.db)
 keytypes(org.Hs.eg.db)
 head(keys(org.Hs.eg.db, keytype="ENTREZID"))
+# returns a named character vector, see ?mapIds for multiVals options
+res <- mapIds(org.Hs.eg.db, keys=k, column="ENSEMBL", keytype="ENTREZID")
+
 # generates warning for 1:many mappings
 res <- select(org.Hs.eg.db, keys=k,
   columns=c("ENTREZID","ENSEMBL","SYMBOL"),
@@ -69,8 +72,6 @@ res <- select(org.Hs.eg.db, keys=k,
 idx <- match(k, res$ENTREZID)
 res[idx,]
 ```
-
-For a cleaner function call, see [convertIDs](https://github.com/mikelove/bioc-refcard/blob/master/convertIDs.R)
 
 [biomaRt](http://www.bioconductor.org/packages/release/bioc/html/biomaRt.html)
 
