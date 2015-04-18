@@ -1,3 +1,5 @@
+# note that this functionality can now be achieved with mapIds in AnnotationDbi >= 1.30
+#
 # Simon Anders' useful function
 # also lives in http://bioconductor.org/help/workflows/rnaseqGene/
 convertIDs <- function( ids, from, to, db, ifMultiple=c("putNA", "useFirst")) {
