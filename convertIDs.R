@@ -1,4 +1,5 @@
-# note that this functionality can now be achieved with mapIds in AnnotationDbi >= 1.30
+# note that this functionality can now be achieved with multiple calls (one for each column)
+# to the mapIds() function in AnnotationDbi >= 1.30
 #
 # Simon Anders' useful function
 # also lives in http://bioconductor.org/help/workflows/rnaseqGene/
