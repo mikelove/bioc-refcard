@@ -6,8 +6,9 @@
 source("http://bioconductor.org/biocLite.R")
 biocLite()
 biocLite(c("package1","package2"))
-# what Bioc version is on your machine?
-BiocInstaller::biocVersion()
+library(BiocInstaller) 
+biocVersion() # what Bioc version is on your machine?
+biocValid() # are packages up to date?
 # what Bioc version is release
 http://bioconductor.org/bioc-version
 # what Bioc versions are release/devel
