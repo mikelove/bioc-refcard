@@ -26,7 +26,8 @@ help(package="foo",help_type="html") # launch web browser help
 vignette("topic")
 browseVignettes(package="package") # show vignettes for the package
 functionName # prints source code
-getMethod("method","class")  # prints source code for methods
+getMethod(method,"class")  # prints source code for method
+selectMethod(method, "class") # will climb the inheritance to find method
 showMethods(classes="class") # show all methods for class
 methods(class="GRanges") # this will work in R >= 3.2
 ?"functionName,class-method" # method help for S4 objects, e.g.:
