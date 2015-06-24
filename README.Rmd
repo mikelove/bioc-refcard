@@ -180,6 +180,8 @@ seqlevelsStyle(x) <- "UCSC" # convert to 'chr1' style from "NCBI" style '1'
 
 [Biostrings](http://www.bioconductor.org/packages/release/bioc/html/Biostrings.html)
 
+see the [Biostrings Quick Overview PDF](http://www.bioconductor.org/packages/release/bioc/vignettes/Biostrings/inst/doc/BiostringsQuickOverview.pdf)
+
 For naming, see [cheat sheet for annotation](http://genomicsclass.github.io/book/pages/annoCheat.html)
 
 ```
