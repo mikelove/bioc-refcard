@@ -40,6 +40,12 @@ packageVersion("foo") # what version of package
 
 Bioconductor support website: https://support.bioconductor.org
 
+If you use RStudio, then you already get nicely rendered documentation using `?` or `help`. If you are a command line person, then you can use this alias to pop up a help page in your web browser with `rhelp functionName packageName`.
+
+```
+alias rhelp="Rscript -e 'args <- commandArgs(TRUE); help(args[2], package=args[3], help_type=\"html\"); Sys.sleep(5)' --args"
+```
+
 ## debugging R
 
 ```
