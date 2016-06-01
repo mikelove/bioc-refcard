@@ -305,14 +305,14 @@ library(GenomicAlignments)
 fls <- list.files(pattern="*.bam$")
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-genes <- exonsBy(txdb, by="gene")
+ebg <- exonsBy(txdb, by="gene")
 # see yieldSize argument for restricting memory
 bf <- BamFileList(fls)
 library(BiocParallel)
 register(MulticoreParam(4))
 # lots of options in the man page
 # singleEnd, ignore.strand, inter.features, fragments, etc.
-se <- summarizeOverlaps(genes, bf)
+se <- summarizeOverlaps(ebg, bf)
 
 # operations on SummarizedExperiment
 assay(se) # the counts from summarizeOverlaps
