@@ -289,8 +289,11 @@ loadDb("txdb.sqlite")
 g <- genes(txdb) # GRanges, just start to end, no exon/intron information
 tx <- transcripts(txdb) # GRanges, similar to genes()
 exons <- exons(txdb) # GRanges for each exon
-exonsByGenes <- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
-exonsByTx <- exonsBy(txdb, by="tx") # similar but by transcript
+ebg <- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
+ebt <- exonsBy(txdb, by="tx") # similar but by transcript
+
+# then get the transcript sequence
+txSeq <- extractTranscriptSeqs(Hsapiens, ebt)
 ```
 
 ## Summarizing information across ranges and experiments
