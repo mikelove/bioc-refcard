@@ -288,7 +288,7 @@ loadDb("txdb.sqlite")
 # extracting information from txdb
 g <- genes(txdb) # GRanges, just start to end, no exon/intron information
 tx <- transcripts(txdb) # GRanges, similar to genes()
-exons <- exons(txdb) # GRanges for each exon
+e <- exons(txdb) # GRanges for each exon
 ebg <- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
 ebt <- exonsBy(txdb, by="tx") # similar but by transcript
 
