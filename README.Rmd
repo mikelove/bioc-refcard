@@ -1,5 +1,7 @@
 # Bioconductor cheat sheet
 
+Also useful are Kasper Daniel Hansen's [Bioconductor class notes](http://kasperdanielhansen.github.io/genbioconductor/).
+
 ## Install
 
 ```
