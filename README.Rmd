@@ -66,6 +66,18 @@ options(error=NULL)
 trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
 ```
 
+## Show package-specific methods for a class
+
+These two long strings of R code do approximately the same thing: obtain 
+the methods that operate on an object of a given class, which are defined
+in a specific package.
+
+```
+intersect(sapply(strsplit(as.character(methods(class="DESeqDataSet")), ","), `[`, 1), ls("package:DESeq2"))
+sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes="DESeqDataSet", 
+    where=getNamespace("DESeq2"), printTo=FALSE), value=TRUE))
+```
+
 ## Annotations
 
 [AnnotationDbi](http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html)
