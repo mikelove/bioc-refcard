@@ -54,6 +54,13 @@ traceback() # what steps lead to an error
 debug(myFunction) # step line-by-line through the code in a function
 undebug(myFunction) # stop debugging
 debugonce(myFunction) # same as above, but doesn't need undebug()
+# also useful if you are writing code is to put
+# the function browser() inside a function at a critical point
+# this plus devtools::load_all() can be useful for programming
+# to jump in function on error:
+options(error=recover)
+# turn that behavior off:
+options(error=NULL)
 # debug, e.g. estimateSizeFactors from DESeq2...
 # debugging an S4 method is more difficult; this gives you a peek inside:
 trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")
