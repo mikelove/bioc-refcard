@@ -354,18 +354,10 @@ res <- results(dds)
 library(edgeR) 
 y <- DGEList(counts=counts,group=group)
 y <- calcNormFactors(y)
-# exact test
-y <- estimateCommonDisp(y)
-y <- estimateTagwiseDisp(y)
-et <- exactTest(y)
-topTags(et)
-# glm
 design <- model.matrix(~group)
-y <- estimateGLMCommonDisp(y,design)
-y <- estimateGLMTrendedDisp(y,design)
-y <- estimateGLMTagwiseDisp(y,design)
+y <- estimateDisp(y,design)
 fit <- glmFit(y,design)
-lrt <- glmLRT(fit,coef=2)
+lrt <- glmLRT(fit)
 topTags(lrt)
 ```
 
@@ -379,7 +371,7 @@ dgel <- calcNormFactors(dgel)
 v <- voom(dgel,design,plot=FALSE)
 fit <- lmFit(v,design)
 fit <- eBayes(fit)
-topTable(fit,coef=2)
+topTable(fit)
 ```
 
 [Many more RNA-seq packages](http://www.bioconductor.org/packages/release/BiocViews.html#___RNASeq)
