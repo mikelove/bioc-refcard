@@ -350,6 +350,12 @@ res <- results(dds)
 [edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
 
 ```
+# filtering code for edgeR and limma-voom, where n is the min group size
+L <- min(colSums(dgel$counts)/1e6)
+keep <- rowSums(cpm(dgel) > 10/L) >= n
+```
+
+```
 # this chunk from the Quick start in the edgeR User Guide
 library(edgeR) 
 y <- DGEList(counts=counts,group=group)
@@ -361,7 +367,7 @@ lrt <- glmLRT(fit)
 topTags(lrt)
 ```
 
-[limma/voom](http://www.bioconductor.org/packages/release/bioc/html/limma.html)
+[limma-voom](http://www.bioconductor.org/packages/release/bioc/html/limma.html)
 
 ```
 library(limma)
