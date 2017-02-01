@@ -337,12 +337,21 @@ res$counts
 
 [DESeq2](http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html)
 
+My preferred pipeline for DESeq2 users is to start with a lightweight transcript
+abundance quantifier such as [Salmon](https://combine-lab.github.io/salmon/)
+and to use [tximport](http://bioconductor.org/packages/tximport), followed
+by `DESeqDataSetFromTximport`.
+
+Here, `coldata` is a *data.frame* with `group` as a column.
+
 ```
 library(DESeq2)
+# from tximport
+dds <- DESeqDataSetFromTximport(txi, coldata, ~ group)
 # from SummarizedExperiment
 dds <- DESeqDataSet(se, ~ group)
 # from count matrix
-dds <- DESeqDataSetFromMatrix(counts, DataFrame(group), ~ group)
+dds <- DESeqDataSetFromMatrix(counts, coldata, ~ group)
 dds <- DESeq(dds)
 res <- results(dds)
 ```
