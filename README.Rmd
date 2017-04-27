@@ -218,6 +218,11 @@ dnastringset <- getSeq(Hsapiens, granges) # returns a DNAStringSet
 ```
 
 ```
+library(Biostrings)
+dnastringset <- readDNAStringSet("transcripts.fa")
+```
+
+```
 substr(dnastringset, 1, 10) # to character string
 subseq(dnastringset, 1, 10) # returns DNAStringSet
 Views(dnastringset, 1, 10) # lightweight views into object
