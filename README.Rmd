@@ -82,6 +82,14 @@ sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes=
 
 ## Annotations
 
+**Edit (May 2017)**: the below needs to be updated to show off AnnotationHub.
+
+For AnnotationHub examples, see:
+
+https://www.bioconductor.org/help/workflows/annotation/Annotation_Resources
+
+The following is how to work with the organism database packages, and biomart.
+
 [AnnotationDbi](http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html)
 
 ```
