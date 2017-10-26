@@ -106,8 +106,6 @@ res <- mapIds(org.Hs.eg.db, keys=k, column="ENSEMBL", keytype="ENTREZID")
 res <- select(org.Hs.eg.db, keys=k,
   columns=c("ENTREZID","ENSEMBL","SYMBOL"),
   keytype="ENTREZID")
-idx <- match(k, res$ENTREZID)
-res[idx,]
 ```
 
 [biomaRt](http://www.bioconductor.org/packages/release/bioc/html/biomaRt.html)
@@ -335,7 +333,20 @@ colData(se)
 rowRanges(se)
 ```
 
-Another fast Bioconductor read counting method is featureCounts in [Rsubread](http://www.bioconductor.org/packages/release/bioc/html/Rsubread.html)
+My preferred quantification method is [Salmon](https://combine-lab.github.io/salmon/), 
+with `--gcBias` option enabled unless you know there is no GC dependence in the data,
+followed by [tximport](http://bioconductor.org/pacakges/tximport). Here is an example of usage:
+
+```{r}
+coldata <- read.table("samples.txt")
+rownames(coldata) <- coldata$id
+files <- coldata$files; names(files) <- coldata$id
+txi <- tximport(files, type="salmon", tx2gene=tx2gene)
+dds <- DESeqDataSetFromTximport(txi, coldata, ~condition)
+```
+
+Another fast Bioconductor read counting method is featureCounts in 
+[Rsubread](http://www.bioconductor.org/packages/release/bioc/html/Rsubread.html).
 
 ```
 library(Rsubread)
@@ -396,7 +407,7 @@ library(limma)
 design <- model.matrix(~ group)
 dgel <- DGEList(counts)
 dgel <- calcNormFactors(dgel)
-v <- voom(dgel,design,plot=FALSE)
+v <- voom(dgel,design)
 fit <- lmFit(v,design)
 fit <- eBayes(fit)
 topTable(fit)
