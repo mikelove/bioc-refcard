@@ -378,6 +378,7 @@ dds <- DESeqDataSet(se, ~ group)
 dds <- DESeqDataSetFromMatrix(counts, coldata, ~ group)
 dds <- DESeq(dds)
 res <- results(dds)
+res <- lfcShrink(dds, coef = 2) # this added in DESeq2 v1.16
 ```
 
 [edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
