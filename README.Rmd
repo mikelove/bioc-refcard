@@ -21,12 +21,19 @@ more information at http://www.bioconductor.org/install/
 
 ## help within R
 
+Simple help:
+
 ```
 ?functionName
 ?"eSet-class" # classes need the '-class' on the end
 help(package="foo",help_type="html") # launch web browser help
 vignette("topic")
 browseVignettes(package="package") # show vignettes for the package
+```
+
+Help for advanced users:
+
+```
 functionName # prints source code
 getMethod(method,"class")  # prints source code for method
 selectMethod(method, "class") # will climb the inheritance to find method
