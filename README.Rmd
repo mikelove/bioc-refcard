@@ -460,7 +460,7 @@ topTable(efit, coef=2)
 library(iCOBRA)
 cd <- COBRAData(pval=pval.df, padj=padj.df, score=score.df, truth=truth.df)
 cp <- calculate_performance(cd, binary_truth = "status", cont_truth = "logFC")
-cplot <- prepare_data_for_plot(cp)
+cobraplot <- prepare_data_for_plot(cp)
 plot_fdrtprcurve(cobraplot)
 # interactive shiny app:
 COBRAapp(cd)
