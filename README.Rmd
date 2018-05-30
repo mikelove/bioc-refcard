@@ -391,15 +391,11 @@ res <- lfcShrink(dds, coef = 2) # this added in DESeq2 v1.16
 [edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
 
 ```
-# filtering code for edgeR and limma-voom, where n is the min group size
-L <- min(colSums(dgel$counts)/1e6)
-keep <- rowSums(cpm(dgel) > 10/L) >= n
-```
-
-```
 # this chunk from the Quick start in the edgeR User Guide
 library(edgeR) 
 y <- DGEList(counts=counts,group=group)
+keep <- filterByExpr(y)
+y <- y[keep,]
 y <- calcNormFactors(y)
 design <- model.matrix(~group)
 y <- estimateDisp(y,design)
@@ -413,9 +409,11 @@ topTags(lrt)
 ```
 library(limma)
 design <- model.matrix(~ group)
-dgel <- DGEList(counts)
-dgel <- calcNormFactors(dgel)
-v <- voom(dgel,design)
+y <- DGEList(counts)
+keep <- filterByExpr(y)
+y <- y[keep,]
+y <- calcNormFactors(y)
+v <- voom(y,design)
 fit <- lmFit(v,design)
 fit <- eBayes(fit)
 topTable(fit)
