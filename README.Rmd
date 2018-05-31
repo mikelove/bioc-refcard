@@ -383,9 +383,13 @@ dds <- DESeqDataSetFromTximport(txi, coldata, ~ group)
 dds <- DESeqDataSet(se, ~ group)
 # from count matrix
 dds <- DESeqDataSetFromMatrix(counts, coldata, ~ group)
+# minimal filtering helps keep things fast 
+# one can set 'n' to e.g. min(5, smallest group sample size)
+keep <- rowSums(counts(dds) >= 10) >= n 
+dds <- dds[keep,]
 dds <- DESeq(dds)
-res <- results(dds)
-res <- lfcShrink(dds, coef = 2) # this added in DESeq2 v1.16
+res <- results(dds) # no shrinkage of LFC, or:
+res <- lfcShrink(dds, coef = 2, type="apeglm") # shrink LFCs
 ```
 
 [edgeR](http://www.bioconductor.org/packages/release/bioc/html/edgeR.html)
@@ -402,6 +406,10 @@ y <- estimateDisp(y,design)
 fit <- glmFit(y,design)
 lrt <- glmLRT(fit)
 topTags(lrt)
+# or use the QL methods:
+qlfit <- glmQLFit(y,design)
+qlft <- glmQLFTest(qlfit)
+topTags(qlft)
 ```
 
 [limma-voom](http://www.bioconductor.org/packages/release/bioc/html/limma.html)
