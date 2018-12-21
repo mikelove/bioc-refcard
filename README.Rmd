@@ -4,20 +4,20 @@ Also useful are Kasper Daniel Hansen's [Bioconductor class notes](http://kasperd
 
 ## Install
 
+For details go to http://bioconductor.org/install/
+
 ```
-source("http://bioconductor.org/biocLite.R")
-biocLite()
-biocLite(c("package1","package2"))
-library(BiocInstaller) 
-biocVersion() # what Bioc version is on your machine?
-biocValid() # are packages up to date?
-# what Bioc version is release
+if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+BiocManager::install()
+BiocManager::install(c("package1","package2")
+BiocManager::valid() # are packages up to date?
+
+# what Bioc version is release right now?
 http://bioconductor.org/bioc-version
-# what Bioc versions are release/devel
+# what Bioc versions are release/devel?
 http://bioconductor.org/js/versions.js
 ```
-
-more information at http://www.bioconductor.org/install/
 
 ## help within R
 
