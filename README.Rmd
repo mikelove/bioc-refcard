@@ -83,8 +83,7 @@ in a specific package.
 
 ```
 intersect(sapply(strsplit(as.character(methods(class="DESeqDataSet")), ","), `[`, 1), ls("package:DESeq2"))
-sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes="DESeqDataSet", 
-    where=getNamespace("DESeq2"), printTo=FALSE), value=TRUE))
+sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes="DESeqDataSet", where=getNamespace("DESeq2"), printTo=FALSE), value=TRUE))
 ```
 
 ## Annotations
