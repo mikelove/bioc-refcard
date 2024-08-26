@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michael Love">
+
+<title>Bioconductor cheat sheet</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="README.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bioconductor cheat sheet</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Michael Love </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<p>For details go to http://bioconductor.org/install/</p>
+<pre><code>if (!requireNamespace("BiocManager"))
+    install.packages("BiocManager")
+BiocManager::install()
+BiocManager::install(c("package1","package2")
+BiocManager::valid() # are packages up to date?
+
+# what Bioc version is release right now?
+http://bioconductor.org/bioc-version
+# what Bioc versions are release/devel?
+http://bioconductor.org/js/versions.js</code></pre>
+</section>
+<section id="help-within-r" class="level2">
+<h2 class="anchored" data-anchor-id="help-within-r">help within R</h2>
+<p>Simple help:</p>
+<pre><code>?functionName
+?"eSet-class" # classes need the '-class' on the end
+help(package="foo",help_type="html") # launch web browser help
+vignette("topic")
+browseVignettes(package="package") # show vignettes for the package</code></pre>
+<p>Help for advanced users:</p>
+<pre><code>functionName # prints source code
+getMethod(method,"class")  # prints source code for method
+selectMethod(method, "class") # will climb the inheritance to find method
+showMethods(classes="class") # show all methods for class
+methods(class="GRanges") # this will work in R &gt;= 3.2
+?"functionName,class-method" # method help for S4 objects, e.g.:
+?"plotMA,data.frame-method" # from library(geneplotter)
+?"method.class" # method help for S3 objects e.g.:
+?"plot.lm"
+sessionInfo() # necessary info for getting help
+packageVersion("foo") # what version of package </code></pre>
+<p>Bioconductor support website: https://support.bioconductor.org</p>
+<p>If you use RStudio, then you already get nicely rendered documentation using <code>?</code> or <code>help</code>. If you are a command line person, then you can use this alias to pop up a help page in your web browser with <code>rhelp functionName packageName</code>.</p>
+<pre><code>alias rhelp="Rscript -e 'args &lt;- commandArgs(TRUE); help(args[2], package=args[3], help_type=\"html\"); Sys.sleep(5)' --args"</code></pre>
+</section>
+<section id="debugging-r" class="level2">
+<h2 class="anchored" data-anchor-id="debugging-r">debugging R</h2>
+<pre><code>traceback() # what steps lead to an error
+# debug a function
+debug(myFunction) # step line-by-line through the code in a function
+undebug(myFunction) # stop debugging
+debugonce(myFunction) # same as above, but doesn't need undebug()
+# also useful if you are writing code is to put
+# the function browser() inside a function at a critical point
+# this plus devtools::load_all() can be useful for programming
+# to jump in function on error:
+options(error=recover)
+# turn that behavior off:
+options(error=NULL)
+# debug, e.g. estimateSizeFactors from DESeq2...
+# debugging an S4 method is more difficult; this gives you a peek inside:
+trace(estimateSizeFactors, browser, exit=browser, signature="DESeqDataSet")</code></pre>
+</section>
+<section id="show-package-specific-methods-for-a-class" class="level2">
+<h2 class="anchored" data-anchor-id="show-package-specific-methods-for-a-class">Show package-specific methods for a class</h2>
+<p>These two long strings of R code do approximately the same thing: obtain the methods that operate on an object of a given class, which are defined in a specific package.</p>
+<pre><code>intersect(sapply(strsplit(as.character(methods(class="DESeqDataSet")), ","), `[`, 1), ls("package:DESeq2"))
+sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes="DESeqDataSet", where=getNamespace("DESeq2"), printTo=FALSE), value=TRUE))</code></pre>
+</section>
+<section id="annotations" class="level2">
+<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
+<p>For AnnotationHub examples, see:</p>
+<p>https://www.bioconductor.org/help/workflows/annotation/Annotation_Resources</p>
+<p>The following is how to work with the organism database packages, and biomart.</p>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html">AnnotationDbi</a></p>
+<pre><code># using one of the annotation packges
+library(AnnotationDbi)
+library(org.Hs.eg.db) # or, e.g. Homo.sapiens
+columns(org.Hs.eg.db)
+keytypes(org.Hs.eg.db)
+head(keys(org.Hs.eg.db, keytype="ENTREZID"))
+# returns a named character vector, see ?mapIds for multiVals options
+res &lt;- mapIds(org.Hs.eg.db, keys=k, column="ENSEMBL", keytype="ENTREZID")
+
+# generates warning for 1:many mappings
+res &lt;- select(org.Hs.eg.db, keys=k,
+  columns=c("ENTREZID","ENSEMBL","SYMBOL"),
+  keytype="ENTREZID")</code></pre>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/biomaRt.html">biomaRt</a></p>
+<pre><code># map from one annotation to another using biomart
+library(biomaRt)
+m &lt;- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+map &lt;- getBM(mart = m,
+  attributes = c("ensembl_gene_id", "entrezgene"),
+  filters = "ensembl_gene_id", 
+  values = some.ensembl.genes)</code></pre>
+</section>
+<section id="genomic-ranges" class="level2">
+<h2 class="anchored" data-anchor-id="genomic-ranges">Genomic ranges</h2>
+<p><a href="http://bioconductor.org/packages/release/bioc/html/GenomicRanges.html">GenomicRanges</a></p>
+<pre><code>library(GenomicRanges)
+z &lt;- GRanges("chr1",IRanges(1000001,1001000),strand="+")
+start(z)
+end(z)
+width(z)
+strand(z)
+mcols(z) # the 'metadata columns', any information stored alongside each range
+ranges(z) # gives the IRanges
+seqnames(z) # the chromosomes for each ranges
+seqlevels(z) # the possible chromosomes
+seqlengths(z) # the lengths for each chromosome</code></pre>
+<section id="intra-range-methods" class="level3">
+<h3 class="anchored" data-anchor-id="intra-range-methods">Intra-range methods</h3>
+<p>Affects ranges independently</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>shift</td>
+<td>moves left/right</td>
+</tr>
+<tr class="even">
+<td>narrow</td>
+<td>narrows by relative position within range</td>
+</tr>
+<tr class="odd">
+<td>resize</td>
+<td>resizes to width, fixing start for +, end for -</td>
+</tr>
+<tr class="even">
+<td>flank</td>
+<td>returns flanking ranges to the left +, or right -</td>
+</tr>
+<tr class="odd">
+<td>promoters</td>
+<td>similar to flank</td>
+</tr>
+<tr class="even">
+<td>restrict</td>
+<td>restricts ranges to a start and end position</td>
+</tr>
+<tr class="odd">
+<td>trim</td>
+<td>trims out of bound ranges</td>
+</tr>
+<tr class="even">
+<td>+/-</td>
+<td>expands/contracts by adding/subtracting fixed amount</td>
+</tr>
+<tr class="odd">
+<td>*</td>
+<td>zooms in (positive) or out (negative) by multiples</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="inter-range-methods" class="level3">
+<h3 class="anchored" data-anchor-id="inter-range-methods">Inter-range methods</h3>
+<p>Affects ranges as a group</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>range</td>
+<td>one range, leftmost start to rightmost end</td>
+</tr>
+<tr class="even">
+<td>reduce</td>
+<td>cover all positions with only one range</td>
+</tr>
+<tr class="odd">
+<td>gaps</td>
+<td>uncovered positions within range</td>
+</tr>
+<tr class="even">
+<td>disjoin</td>
+<td>breaks into discrete ranges based on original starts/ends</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="nearest-methods" class="level3">
+<h3 class="anchored" data-anchor-id="nearest-methods">Nearest methods</h3>
+<p>Given two sets of ranges, <code>x</code> and <code>subject</code>, for each range in <code>x</code>, returns…</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>function</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>nearest</td>
+<td>index of the nearest neighbor range in subject</td>
+</tr>
+<tr class="even">
+<td>precede</td>
+<td>index of the range in subject that is directly preceded by the range in x</td>
+</tr>
+<tr class="odd">
+<td>follow</td>
+<td>index of the range in subject that is directly followed by the range in x</td>
+</tr>
+<tr class="even">
+<td>distanceToNearest</td>
+<td>distances to its nearest neighbor in subject (Hits object)</td>
+</tr>
+<tr class="odd">
+<td>distance</td>
+<td>distances to nearest neighbor (integer vector)</td>
+</tr>
+</tbody>
+</table>
+<p>A Hits object can be accessed with <code>queryHits</code>, <code>subjectHits</code> and <code>mcols</code> if a distance is associated.</p>
+</section>
+<section id="set-methods" class="level3">
+<h3 class="anchored" data-anchor-id="set-methods">set methods</h3>
+<p>If <code>y</code> is a GRangesList, then use <code>punion</code>, etc. All functions have default <code>ignore.strand=FALSE</code>, so are strand specific.</p>
+<pre><code>union(x,y) 
+intersect(x,y)
+setdiff(x,y)</code></pre>
+</section>
+<section id="overlaps" class="level3">
+<h3 class="anchored" data-anchor-id="overlaps">Overlaps</h3>
+<pre><code>x %over% y  # logical vector of which x overlaps any in y
+fo &lt;- findOverlaps(x,y) # returns a Hits object
+queryHits(fo)   # which in x
+subjectHits(fo) # which in y </code></pre>
+</section>
+<section id="seqnames-and-seqlevels" class="level3">
+<h3 class="anchored" data-anchor-id="seqnames-and-seqlevels">Seqnames and seqlevels</h3>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/GenomicRanges.html">GenomicRanges</a> and <a href="http://www.bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html">GenomeInfoDb</a></p>
+<pre><code>gr.sub &lt;- gr[seqlevels(gr) == "chr1"]
+seqlevelsStyle(x) &lt;- "UCSC" # convert to 'chr1' style from "NCBI" style '1'</code></pre>
+</section>
+</section>
+<section id="sequences" class="level2">
+<h2 class="anchored" data-anchor-id="sequences">Sequences</h2>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/Biostrings.html">Biostrings</a></p>
+<p>see the <a href="http://www.bioconductor.org/packages/release/bioc/vignettes/Biostrings/inst/doc/BiostringsQuickOverview.pdf">Biostrings Quick Overview PDF</a></p>
+<p>For naming, see <a href="http://genomicsclass.github.io/book/pages/annoCheat.html">cheat sheet for annotation</a></p>
+<pre><code>library(BSgenome.Hsapiens.UCSC.hg19)
+dnastringset &lt;- getSeq(Hsapiens, granges) # returns a DNAStringSet
+# also Views() for Bioconductor &gt;= 3.1</code></pre>
+<pre><code>library(Biostrings)
+dnastringset &lt;- readDNAStringSet("transcripts.fa")</code></pre>
+<pre><code>substr(dnastringset, 1, 10) # to character string
+subseq(dnastringset, 1, 10) # returns DNAStringSet
+Views(dnastringset, 1, 10) # lightweight views into object
+complement(dnastringset)
+reverseComplement(dnastringset)
+matchPattern("ACGTT", dnastring) # also countPattern, also works on Hsapiens/genome
+vmatchPattern("ACGTT", dnastringset) # also vcountPattern
+letterFrequecy(dnastringset, "CG") # how many C's or G's
+# also letterFrequencyInSlidingView
+alphabetFrequency(dnastringset, as.prob=TRUE)
+# also oligonucleotideFrequency, dinucleotideFrequency, trinucleotideFrequency
+# transcribe/translate for imitating biological processes</code></pre>
+</section>
+<section id="sequencing-data" class="level2">
+<h2 class="anchored" data-anchor-id="sequencing-data">Sequencing data</h2>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/Rsamtools.html">Rsamtools</a> <code>scanBam</code> returns lists of raw values from BAM files</p>
+<pre><code>library(Rsamtools)
+which &lt;- GRanges("chr1",IRanges(1000001,1001000))
+what &lt;- c("rname","strand","pos","qwidth","seq")
+param &lt;- ScanBamParam(which=which, what=what)
+# for more BamFile functions/details see ?BamFile
+# yieldSize for chunk-wise access
+bamfile &lt;- BamFile("/path/to/file.bam")
+reads &lt;- scanBam(bamfile, param=param)
+res &lt;- countBam(bamfile, param=param) 
+# for more sophisticated counting modes
+# see summarizeOverlaps() below
+
+# quickly check chromosome names
+seqinfo(BamFile("/path/to/file.bam"))
+
+# DNAStringSet is defined in the Biostrings package
+# see the Biostrings Quick Overview PDF
+dnastringset &lt;- scanFa(fastaFile, param=granges)</code></pre>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/GenomicAlignments.html">GenomicAlignments</a> returns Bioconductor objects (GRanges-based)</p>
+<pre><code>library(GenomicAlignments)
+ga &lt;- readGAlignments(bamfile) # single-end
+ga &lt;- readGAlignmentPairs(bamfile) # paired-end</code></pre>
+</section>
+<section id="transcript-databases" class="level2">
+<h2 class="anchored" data-anchor-id="transcript-databases">Transcript databases</h2>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/GenomicFeatures.html">GenomicFeatures</a></p>
+<pre><code># get a transcript database, which stores exon, trancript, and gene information
+library(GenomicFeatures)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb &lt;- TxDb.Hsapiens.UCSC.hg19.knownGene
+
+# or build a txdb from GTF file (e.g. downloadable from Ensembl FTP site)
+txdb &lt;- makeTranscriptDbFromGFF("file.GTF", format="gtf")
+
+# or build a txdb from Biomart (however, not as easy to reproduce later)
+txdb &lt;- makeTranscriptDbFromBiomart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+
+# in Bioconductor &gt;= 3.1, also makeTxDbFromGRanges
+
+# saving and loading
+saveDb(txdb, file="txdb.sqlite")
+loadDb("txdb.sqlite")
+
+# extracting information from txdb
+g &lt;- genes(txdb) # GRanges, just start to end, no exon/intron information
+tx &lt;- transcripts(txdb) # GRanges, similar to genes()
+e &lt;- exons(txdb) # GRanges for each exon
+ebg &lt;- exonsBy(txdb, by="gene") # exons grouped in a GRangesList by gene
+ebt &lt;- exonsBy(txdb, by="tx") # similar but by transcript
+
+# then get the transcript sequence
+txSeq &lt;- extractTranscriptSeqs(Hsapiens, ebt)</code></pre>
+</section>
+<section id="summarizing-information-across-ranges-and-experiments" class="level2">
+<h2 class="anchored" data-anchor-id="summarizing-information-across-ranges-and-experiments">Summarizing information across ranges and experiments</h2>
+<p>The SummarizedExperiment is a storage class for high-dimensional information tied to the same GRanges or GRangesList across experiments (e.g., read counts in exons for each gene).</p>
+<pre><code>library(GenomicAlignments)
+fls &lt;- list.files(pattern="*.bam$")
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+txdb &lt;- TxDb.Hsapiens.UCSC.hg19.knownGene
+ebg &lt;- exonsBy(txdb, by="gene")
+# see yieldSize argument for restricting memory
+bf &lt;- BamFileList(fls)
+library(BiocParallel)
+register(MulticoreParam(4))
+# lots of options in the man page
+# singleEnd, ignore.strand, inter.features, fragments, etc.
+se &lt;- summarizeOverlaps(ebg, bf)
+
+# operations on SummarizedExperiment
+assay(se) # the counts from summarizeOverlaps
+colData(se)
+rowRanges(se)</code></pre>
+<p>My preferred quantification method is <a href="https://combine-lab.github.io/salmon/">Salmon</a>, with <code>--gcBias</code> option enabled unless you know there is no GC dependence in the data, followed by <a href="http://bioconductor.org/pacakges/tximport">tximport</a>. Here is an example of usage:</p>
+<pre><code>coldata &lt;- read.table("samples.txt")
+rownames(coldata) &lt;- coldata$id
+files &lt;- coldata$files; names(files) &lt;- coldata$id
+txi &lt;- tximport(files, type="salmon", tx2gene=tx2gene)
+dds &lt;- DESeqDataSetFromTximport(txi, coldata, ~condition)</code></pre>
+<p>Another fast Bioconductor read counting method is featureCounts in <a href="http://www.bioconductor.org/packages/release/bioc/html/Rsubread.html">Rsubread</a>.</p>
+<pre><code>library(Rsubread)
+res &lt;- featureCounts(files, annot.ext="annotation.gtf",
+  isGTFAnnotationFile=TRUE,
+  GTF.featureType="exon",
+  GTF.attrType="gene_id")
+res$counts</code></pre>
+</section>
+<section id="rna-seq-gene-wise-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="rna-seq-gene-wise-analysis">RNA-seq gene-wise analysis</h2>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a></p>
+<p>My preferred pipeline for DESeq2 users is to start with a lightweight transcript abundance quantifier such as <a href="https://combine-lab.github.io/salmon/">Salmon</a> and to use <a href="http://bioconductor.org/packages/tximport">tximport</a>, followed by <code>DESeqDataSetFromTximport</code>.</p>
+<p>Here, <code>coldata</code> is a <em>data.frame</em> with <code>group</code> as a column.</p>
+<pre><code>library(DESeq2)
+# from tximport
+dds &lt;- DESeqDataSetFromTximport(txi, coldata, ~ group)
+# from SummarizedExperiment
+dds &lt;- DESeqDataSet(se, ~ group)
+# from count matrix
+dds &lt;- DESeqDataSetFromMatrix(counts, coldata, ~ group)
+# minimal filtering helps keep things fast 
+# one can set 'n' to e.g. min(5, smallest group sample size)
+keep &lt;- rowSums(counts(dds) &gt;= 10) &gt;= n 
+dds &lt;- dds[keep,]
+dds &lt;- DESeq(dds)
+res &lt;- results(dds) # no shrinkage of LFC, or:
+res &lt;- lfcShrink(dds, coef = 2, type="apeglm") # shrink LFCs</code></pre>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a></p>
+<pre><code># this chunk from the Quick start in the edgeR User Guide
+library(edgeR) 
+y &lt;- DGEList(counts=counts,group=group)
+keep &lt;- filterByExpr(y)
+y &lt;- y[keep,]
+y &lt;- calcNormFactors(y)
+design &lt;- model.matrix(~group)
+y &lt;- estimateDisp(y,design)
+fit &lt;- glmFit(y,design)
+lrt &lt;- glmLRT(fit)
+topTags(lrt)
+# or use the QL methods:
+qlfit &lt;- glmQLFit(y,design)
+qlft &lt;- glmQLFTest(qlfit)
+topTags(qlft)</code></pre>
+<p><a href="http://www.bioconductor.org/packages/release/bioc/html/limma.html">limma-voom</a></p>
+<pre><code>library(limma)
+design &lt;- model.matrix(~ group)
+y &lt;- DGEList(counts)
+keep &lt;- filterByExpr(y)
+y &lt;- y[keep,]
+y &lt;- calcNormFactors(y)
+v &lt;- voom(y,design)
+fit &lt;- lmFit(v,design)
+fit &lt;- eBayes(fit)
+topTable(fit)</code></pre>
+<p><a href="http://www.bioconductor.org/packages/release/BiocViews.html#___RNASeq">Many more RNA-seq packages</a></p>
+</section>
+<section id="expression-set" class="level2">
+<h2 class="anchored" data-anchor-id="expression-set">Expression set</h2>
+<pre><code>library(Biobase)
+data(sample.ExpressionSet)
+e &lt;- sample.ExpressionSet
+exprs(e)
+pData(e)
+fData(e)</code></pre>
+</section>
+<section id="get-geo-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="get-geo-dataset">Get GEO dataset</h2>
+<pre><code>library(GEOquery)
+e &lt;- getGEO("GSE9514")</code></pre>
+</section>
+<section id="microarray-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="microarray-analysis">Microarray analysis</h2>
+<pre><code>library(affy)
+library(limma)
+phenoData &lt;- read.AnnotatedDataFrame("sample-description.csv")
+eset &lt;- justRMA("/celfile-directory", phenoData=phenoData)
+design &lt;- model.matrix(~ Disease, pData(eset))
+fit &lt;- lmFit(eset, design)
+efit &lt;- eBayes(fit)
+topTable(efit, coef=2)</code></pre>
+</section>
+<section id="icobra-performance-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="icobra-performance-metrics">iCOBRA performance metrics</h2>
+<pre><code>library(iCOBRA)
+cd &lt;- COBRAData(pval=pval.df, padj=padj.df, score=score.df, truth=truth.df)
+cp &lt;- calculate_performance(cd, binary_truth = "status", cont_truth = "logFC")
+cobraplot &lt;- prepare_data_for_plot(cp)
+plot_fdrtprcurve(cobraplot)
+# interactive shiny app:
+COBRAapp(cd)</code></pre>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
