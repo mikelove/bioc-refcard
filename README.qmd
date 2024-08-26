@@ -1,6 +1,12 @@
-# Bioconductor cheat sheet
-
-Also useful are Kasper Daniel Hansen's [Bioconductor class notes](http://kasperdanielhansen.github.io/genbioconductor/).
+---
+title: Bioconductor cheat sheet
+author: Michael Love
+format: 
+  html: default
+  pdf:
+    documentclass: article
+    geometry: "margin=1in"
+---
 
 ## Install
 
@@ -87,8 +93,6 @@ sub("Function: (.*) \\(package .*\\)","\\1",grep("Function",showMethods(classes=
 ```
 
 ## Annotations
-
-**Edit (May 2017)**: the below needs to be updated to show off AnnotationHub.
 
 For AnnotationHub examples, see:
 
@@ -343,7 +347,7 @@ My preferred quantification method is [Salmon](https://combine-lab.github.io/sal
 with `--gcBias` option enabled unless you know there is no GC dependence in the data,
 followed by [tximport](http://bioconductor.org/pacakges/tximport). Here is an example of usage:
 
-```{r}
+```
 coldata <- read.table("samples.txt")
 rownames(coldata) <- coldata$id
 files <- coldata$files; names(files) <- coldata$id
